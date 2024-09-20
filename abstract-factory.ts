@@ -1,5 +1,6 @@
 interface IFurniture {
   getType(): string;
+  isSameSet(collaborator: IFurniture): boolean;
 }
 
 abstract class Furniture implements IFurniture {
@@ -7,6 +8,10 @@ abstract class Furniture implements IFurniture {
 
   getType(): string {
     return this.type;
+  }
+
+  isSameSet(collaborator: IFurniture): boolean {
+    return this.getType() === collaborator.getType();
   }
 }
 
@@ -30,27 +35,17 @@ class VictorianChair extends Victorian implements IChair {}
 
 class ModernChair extends Modern implements IChair {}
 
-interface ISofa extends IFurniture {
-  isSameSet(collaborator: IFurniture): boolean;
-}
+interface ISofa extends IFurniture {}
 
-class VictorianSofa extends Victorian implements ISofa {
-  isSameSet(collaborator: IFurniture): boolean {
-    return this.getType() === collaborator.getType();
-  }
-}
+class VictorianSofa extends Victorian implements ISofa {}
 
-class ModernSofa extends Modern implements ISofa {
-  isSameSet(collaborator: IFurniture): boolean {
-    return this.getType() === collaborator.getType();
-  }
-}
+class ModernSofa extends Modern implements ISofa {}
 
-interface ICoffeeTable {}
+interface ICoffeeTable extends IFurniture {}
 
-class VictorianCoffeeTable implements ICoffeeTable {}
+class VictorianCoffeeTable extends Victorian implements ICoffeeTable {}
 
-class ModernCoffeeTable implements ICoffeeTable {}
+class ModernCoffeeTable extends Modern implements ICoffeeTable {}
 
 interface IFurnitureFactory {
   createChair(): IChair;
@@ -84,14 +79,14 @@ class ModernFurnitureFactory implements IFurnitureFactory {
 
 interface IDecoration {
   chair: IChair;
-  coffeeTAble: ICoffeeTable;
+  coffeeTable: ICoffeeTable;
   sofa: ISofa;
 }
 
 const getDecorations = (factory: IFurnitureFactory): IDecoration => {
   return {
     chair: factory.createChair(),
-    coffeeTAble: factory.createCoffeeTable(),
+    coffeeTable: factory.createCoffeeTable(),
     sofa: factory.createSofa(),
   };
 };
