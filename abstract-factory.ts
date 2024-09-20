@@ -2,29 +2,35 @@ interface IFurniture {
   getType(): string;
 }
 
-abstract class Victorian implements IFurniture {
-  private type = Victorian.name;
+abstract class Furniture implements IFurniture {
+  protected type: string;
 
   getType(): string {
     return this.type;
   }
 }
 
-abstract class Modern implements IFurniture {
-  private type = Modern.name;
-
-  getType(): string {
-    return this.type;
+abstract class Victorian extends Furniture {
+  constructor() {
+    super();
+    this.type = Victorian.name;
   }
 }
 
-interface IChair {}
+abstract class Modern extends Furniture {
+  constructor() {
+    super();
+    this.type = Modern.name;
+  }
+}
+
+interface IChair extends IFurniture {}
 
 class VictorianChair extends Victorian implements IChair {}
 
 class ModernChair extends Modern implements IChair {}
 
-interface ISofa {
+interface ISofa extends IFurniture {
   isSameSet(collaborator: IFurniture): boolean;
 }
 
@@ -36,7 +42,6 @@ class VictorianSofa extends Victorian implements ISofa {
 
 class ModernSofa extends Modern implements ISofa {
   isSameSet(collaborator: IFurniture): boolean {
-    const type = collaborator.getType();
     return this.getType() === collaborator.getType();
   }
 }
@@ -77,15 +82,27 @@ class ModernFurnitureFactory implements IFurnitureFactory {
   }
 }
 
+interface IDecoration {
+  chair: IChair;
+  coffeeTAble: ICoffeeTable;
+  sofa: ISofa;
+}
+
+const getDecorations = (factory: IFurnitureFactory): IDecoration => {
+  return {
+    chair: factory.createChair(),
+    coffeeTAble: factory.createCoffeeTable(),
+    sofa: factory.createSofa(),
+  };
+};
+
 (() => {
   console.log('Client: Testing client code with the first factory type...');
   const victorian = new VictorianFurnitureFactory();
-  const victorianChair = victorian.createChair();
-  const victorianCoffeeTable = victorian.createCoffeeTable();
-  const victorianSofa = victorian.createSofa();
+  const victorianDecorations = getDecorations(victorian);
 
-  console.log(victorianChair.getType());
-  console.log(victorianSofa.isSameSet(victorianChair));
+  console.log(victorianDecorations.chair.getType());
+  console.log(victorianDecorations.sofa.isSameSet(victorianDecorations.chair));
 
   console.log('');
 
@@ -93,10 +110,8 @@ class ModernFurnitureFactory implements IFurnitureFactory {
     'Client: Testing the same client code with the second factory type...',
   );
   const modern = new ModernFurnitureFactory();
-  const modernChair = modern.createChair();
-  const modernCoffeeTable = modern.createCoffeeTable();
-  const modernSofa = modern.createSofa();
+  const modernDecorations = getDecorations(modern);
 
-  console.log(modernChair.getType());
-  console.log(modernSofa.isSameSet(modernChair));
+  console.log(modernDecorations.chair.getType());
+  console.log(modernDecorations.sofa.isSameSet(modernDecorations.chair));
 })();
