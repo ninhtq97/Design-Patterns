@@ -3,26 +3,14 @@ interface ITransport {
 }
 
 class Truck implements ITransport {
-  private constructor() {}
-
   deliver(): string {
     return '{Result of the trunk}';
-  }
-
-  static new() {
-    return new Truck();
   }
 }
 
 class Ship implements ITransport {
-  private constructor() {}
-
   deliver(): string {
     return '{Result of the ship}';
-  }
-
-  static new(): Ship {
-    return new Ship();
   }
 }
 
@@ -35,23 +23,54 @@ abstract class Logistics {
 }
 
 class RoadLogistics extends Logistics {
+  private constructor() {
+    super();
+  }
+
   protected createTransport(): ITransport {
-    return Truck.new();
+    return new Truck();
+  }
+
+  static new() {
+    return new this();
   }
 }
 
 class SeaLogistics extends Logistics {
+  private constructor() {
+    super();
+  }
+
   protected createTransport(): ITransport {
-    return Ship.new();
+    return new Ship();
+  }
+
+  static new() {
+    return new this();
   }
 }
 
+const mapLogistics = {
+  road: RoadLogistics.new(),
+  sea: SeaLogistics.new(),
+};
+
+const getLogistics = (type: 'road' | 'sea') => {
+  const logistics = mapLogistics[type];
+
+  if (!logistics) {
+    throw new Error('Invalid type');
+  }
+
+  return logistics;
+};
+
 (() => {
-  const road = new RoadLogistics();
+  const road = getLogistics('road');
   console.log(road.plainDelivery());
 
   console.log('');
 
-  const sea = new SeaLogistics();
+  const sea = getLogistics('sea');
   console.log(sea.plainDelivery());
 })();

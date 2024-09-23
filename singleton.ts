@@ -1,17 +1,17 @@
 class DB {
-  private static instance: DB;
-  private connected: boolean;
+  static #instance: DB;
+  #connected: boolean;
 
   constructor() {
-    if (DB.instance) return DB.instance;
-    DB.instance = this;
+    if (DB.#instance) return DB.#instance;
+    DB.#instance = this;
   }
 
   async connect() {
     const promise = new Promise((resolve, _reject) =>
       setTimeout(() => {
-        this.connected = true;
-        resolve(this.connected);
+        this.#connected = true;
+        resolve(this.#connected);
       }, 2000),
     );
 
@@ -19,12 +19,12 @@ class DB {
     return await promise.then((connected: boolean) => connected);
   }
 
-  static get getInstance() {
-    return DB.instance;
+  static get instance() {
+    return DB.#instance;
   }
 
-  get isConnected() {
-    return this.connected;
+  get connected() {
+    return this.#connected;
   }
 }
 
@@ -37,5 +37,5 @@ class DB {
   console.log('Con2:', con2);
 
   console.log(con1 === con2);
-  console.log(con1.isConnected, con2.isConnected);
+  console.log(con1.connected, con2.connected);
 })();

@@ -24,9 +24,9 @@ class NotifierDecorator implements Notifier {
   private core: NotifierDecorator;
   private notifier: Notifier;
 
-  constructor(core: NotifierDecorator, notifier: Notifier) {
-    this.core = core;
+  constructor(notifier: Notifier, core?: NotifierDecorator) {
     this.notifier = notifier;
+    this.core = core;
   }
 
   send(message: string): void {
@@ -38,12 +38,12 @@ class NotifierDecorator implements Notifier {
   }
 
   decorate(notifier: Notifier) {
-    return new NotifierDecorator(this, notifier);
+    return new NotifierDecorator(notifier, this);
   }
 }
 
 (() => {
-  const notifier = new NotifierDecorator(null, new EmailNotifier())
+  const notifier = new NotifierDecorator(new EmailNotifier())
     .decorate(new SMSNotifier())
     .decorate(new TelegramNotifier());
 

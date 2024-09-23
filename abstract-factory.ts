@@ -49,64 +49,98 @@ class ModernCoffeeTable extends Modern implements ICoffeeTable {}
 
 interface IFurnitureFactory {
   createChair(): IChair;
-  createCoffeeTable(): ICoffeeTable;
   createSofa(): ISofa;
+  createCoffeeTable(): ICoffeeTable;
 }
 
 class VictorianFurnitureFactory implements IFurnitureFactory {
+  private constructor() {}
+
   createChair() {
     return new VictorianChair();
   }
+
+  createSofa() {
+    return new VictorianSofa();
+  }
+
   createCoffeeTable() {
     return new VictorianCoffeeTable();
   }
-  createSofa() {
-    return new VictorianSofa();
+
+  static new() {
+    return new this();
   }
 }
 
 class ModernFurnitureFactory implements IFurnitureFactory {
+  private constructor() {}
+
   createChair() {
     return new ModernChair();
   }
-  createCoffeeTable() {
-    return new ModernCoffeeTable();
-  }
+
   createSofa() {
     return new ModernSofa();
   }
+
+  createCoffeeTable() {
+    return new ModernCoffeeTable();
+  }
+
+  static new() {
+    return new this();
+  }
 }
+
+const mapFurniture = {
+  victorian: VictorianFurnitureFactory.new(),
+  modern: ModernFurnitureFactory.new(),
+};
+
+const getFurnitureFactory = (type: 'victorian' | 'modern') => {
+  const factory = mapFurniture[type];
+
+  if (!factory) {
+    throw new Error('Invalid type');
+  }
+
+  return factory;
+};
 
 interface IDecoration {
   chair: IChair;
-  coffeeTable: ICoffeeTable;
   sofa: ISofa;
+  coffeeTable: ICoffeeTable;
 }
 
 const getDecorations = (factory: IFurnitureFactory): IDecoration => {
   return {
     chair: factory.createChair(),
-    coffeeTable: factory.createCoffeeTable(),
     sofa: factory.createSofa(),
+    coffeeTable: factory.createCoffeeTable(),
   };
 };
 
 (() => {
-  console.log('Client: Testing client code with the first factory type...');
-  const victorian = new VictorianFurnitureFactory();
+  const victorian = getFurnitureFactory('victorian');
   const victorianDecorations = getDecorations(victorian);
 
-  console.log(victorianDecorations.chair.getType());
-  console.log(victorianDecorations.sofa.isSameSet(victorianDecorations.chair));
-
+  console.log('Decorations:', victorianDecorations);
+  console.log(
+    'Is same set:',
+    victorianDecorations.chair.isSameSet(victorianDecorations.sofa) &&
+      victorianDecorations.sofa.isSameSet(victorianDecorations.coffeeTable),
+  );
   console.log('');
 
-  console.log(
-    'Client: Testing the same client code with the second factory type...',
-  );
-  const modern = new ModernFurnitureFactory();
+  const modern = getFurnitureFactory('modern');
   const modernDecorations = getDecorations(modern);
 
-  console.log(modernDecorations.chair.getType());
-  console.log(modernDecorations.sofa.isSameSet(modernDecorations.chair));
+  console.log('Decorations:', modernDecorations);
+  console.log(
+    'Is same set:',
+    modernDecorations.chair.isSameSet(modernDecorations.sofa) &&
+      modernDecorations.sofa.isSameSet(modernDecorations.coffeeTable),
+  );
 })();
