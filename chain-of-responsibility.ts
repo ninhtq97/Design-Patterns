@@ -60,40 +60,36 @@ class ActivateHandler extends AbstractHandler {
   }
 }
 
-const useMiddlewares = (...middlewares: IHandler[]) => {
+const useMiddlewares = (middlewares: IHandler[]) => {
   if (!middlewares.length) return;
 
-  const hdl = middlewares.at(0);
-
-  let currentNode = hdl;
+  const node = middlewares.at(0);
+  let currentNode = node;
 
   for (let i = 1; i < middlewares.length; i++) {
-    currentNode.next(middlewares[i]);
-    currentNode = middlewares[i];
+    const middleware = middlewares[i];
+    currentNode.next(middleware);
+    currentNode = middleware;
   }
 
-  return hdl;
+  return node;
 };
 
 class Service {
-  protected middlewares: IHandler[];
+  protected handler: IHandler;
 
-  constructor(...middlewares: IHandler[]) {
-    this.middlewares = middlewares;
+  middlewares(...handlers: IHandler[]) {
+    this.handler = useMiddlewares(handlers);
   }
 
   handle(): void {
     const req = { body: { username: 'guest', password: 'guest' } };
 
-    if (this.middlewares.length > 0) {
-      const middleware = useMiddlewares(...this.middlewares);
+    if (this.handler) {
+      const res = this.handler.handle(req);
 
-      if (middleware) {
-        const res = middleware.handle(req);
-
-        if (!res) {
-          throw new Error('Invalid');
-        }
+      if (!res) {
+        throw new Error('Invalid');
       }
     }
 
@@ -102,9 +98,13 @@ class Service {
 }
 
 (() => {
-  new Service(
+  const service = new Service();
+
+  service.middlewares(
     new AuthenticationHandler(),
     new AuthorizationHandler(),
     new ActivateHandler(),
-  ).handle();
+  );
+
+  service.handle();
 })();
