@@ -1,14 +1,8 @@
 abstract class Shape {
-  protected color: Color;
-
-  constructor(color: Color) {
+  constructor(protected color: Color) {
     this.color = color;
   }
-
-  getInfo(): string {
-    const color = this.color.getName();
-    return `This shape with color ${color}`;
-  }
+  abstract getInfo(): string;
 }
 
 class Circle extends Shape {

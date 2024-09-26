@@ -21,10 +21,7 @@ class TelegramNotifier implements Notifier {
 }
 
 class NotifierDecorator implements Notifier {
-  private core: NotifierDecorator;
-  private notifier: Notifier;
-
-  constructor(notifier: Notifier, core?: NotifierDecorator) {
+  constructor(private notifier: Notifier, private core?: NotifierDecorator) {
     this.notifier = notifier;
     this.core = core;
   }

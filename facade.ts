@@ -1,8 +1,5 @@
 class Facade {
-  protected account: Account;
-  protected product: Product;
-
-  constructor(account?: Account, product?: Product) {
+  constructor(protected account?: Account, protected product?: Product) {
     this.account = account || new Account();
     this.product = product || new Product();
   }

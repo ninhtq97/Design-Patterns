@@ -16,9 +16,8 @@ class DataStorage implements IDataStorage {
 
 class ProxyDataStorage implements IDataStorage {
   private cache: number;
-  private storage: IDataStorage;
 
-  constructor(storage: IDataStorage) {
+  constructor(private storage: IDataStorage) {
     this.storage = storage;
   }
 

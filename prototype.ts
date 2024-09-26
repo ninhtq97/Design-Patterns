@@ -1,8 +1,5 @@
 class Point {
-  x: number;
-  y: number;
-
-  constructor(x: number, y: number) {
+  constructor(public x: number, public y: number) {
     this.x = x;
     this.y = y;
   }
@@ -13,10 +10,7 @@ class Point {
 }
 
 class Coordinate {
-  value: Point;
-  children: Point[];
-
-  constructor(value: Point, children: Point[]) {
+  constructor(public value: Point, public children: Point[]) {
     this.value = value;
     this.children = children;
   }

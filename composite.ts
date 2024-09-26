@@ -3,20 +3,14 @@ interface IFile {
 }
 
 class FileItem implements IFile {
-  name: string;
-  size: number;
-
-  constructor(name: string, size: number) {
+  constructor(public name: string, public size: number) {
     this.name = name;
     this.size = size;
   }
 }
 
 class Folder {
-  files: FileItem[];
-  children: Folder[];
-
-  constructor(files: FileItem[] = [], children: Folder[] = []) {
+  constructor(public files: FileItem[] = [], public children: Folder[] = []) {
     this.files = files;
     this.children = children;
   }
@@ -33,10 +27,7 @@ class Folder {
 }
 
 class Disk {
-  files: FileItem[];
-  folders: Folder[];
-
-  constructor(files: FileItem[] = [], folders: Folder[] = []) {
+  constructor(public files: FileItem[] = [], public folders: Folder[] = []) {
     this.files = files;
     this.folders = folders;
   }

@@ -1,17 +1,15 @@
 class Operator {
-  #strategy: Strategy;
-
-  constructor(strategy: Strategy) {
-    this.#strategy = strategy;
+  constructor(private strategy: Strategy) {
+    this.strategy = strategy;
   }
 
   setStrategy(strategy: Strategy) {
-    this.#strategy = strategy;
+    this.strategy = strategy;
   }
 
   execute(a: number, b: number): number {
     console.log('Context: Running algorithm');
-    const result = this.#strategy.execute(a, b);
+    const result = this.strategy.execute(a, b);
     console.log('Result:', result);
     return result;
   }
