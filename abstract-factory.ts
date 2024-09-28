@@ -93,12 +93,14 @@ class ModernFurnitureFactory implements IFurnitureFactory {
   }
 }
 
-const mapFurniture = {
+type FurnitureType = 'victorian' | 'modern';
+
+const mapFurniture: Record<FurnitureType, IFurnitureFactory> = {
   victorian: VictorianFurnitureFactory.new(),
   modern: ModernFurnitureFactory.new(),
 };
 
-const getFurnitureFactory = (type: 'victorian' | 'modern') => {
+const getFurnitureFactory = (type: FurnitureType) => {
   const factory = mapFurniture[type];
 
   if (!factory) {
@@ -132,6 +134,7 @@ const getDecorations = (factory: IFurnitureFactory): IDecoration => {
     victorianDecorations.chair.isSameSet(victorianDecorations.sofa) &&
       victorianDecorations.sofa.isSameSet(victorianDecorations.coffeeTable),
   );
+
   console.log('');
 
   const modern = getFurnitureFactory('modern');
